@@ -17,3 +17,9 @@ module "governance" {
   project_name  = "saas-control-plane"
   alert_email   = "michaelkariuki7@gmail.com"
 }
+
+module "network" {
+  source       = "./modules/network"
+  project_name = "saas-control-plane"
+  environment  = "dev"
+}
