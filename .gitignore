@@ -14,3 +14,7 @@ cdk.out/
 
 # OS
 .DS_Store
+
+# Terraform
+.terraform/
+terraform.tfstate
