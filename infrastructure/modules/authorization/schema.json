@@ -1,0 +1,32 @@
+{
+    "SaaSApp": {
+        "entityTypes": {
+            "User": {
+                "shape": {
+                    "type": "Record",
+                    "attributes": {
+                        "tenant_id": { "type": "String" }
+                    }
+                },
+                "memberOfTypes": []
+            },
+            "System": {
+                "shape": {
+                    "type": "Record",
+                    "attributes": {
+                        "tenant_id": { "type": "String" }
+                    }
+                },
+                "memberOfTypes": []
+            }
+        },
+        "actions": {
+            "AccessData": {
+                "appliesTo": {
+                    "principalTypes": ["User"],
+                    "resourceTypes": ["System"]
+                }
+            }
+        }
+    }
+}
