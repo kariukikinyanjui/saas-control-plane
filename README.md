@@ -26,14 +26,25 @@
     * *Limit:* $25.00/month.
     * *Alerts:* 80% Actual Spend, 100% Forecasted Spend.
 
+### C. Network Architecture (The Vault)
+* **Design:** Custom VPC with strict Public/Private subnet separation.
+* **Security:**
+    * **Public Zone:** Contains the Application Load Balancer (ALB) and Bastion Host.
+    * **Private Zone:** Houses the RDS Instance and Lambda Functions. **No Internet Gateway attachment.**
+
 ## 3. Documentation
-* [Architecture Decision Records (ARD)](docs/adr/)
+* [ADR-0001: Data Isolation Strategy](docs/adr/0001-database-isolation-strategy.md)
+* [ADR-0002: Identity and Access Management Strategy](docs/adr/0002-identity-and-access-management.md)
+* [ADR-0003: Netowrk Isolation Strategy](docs/adr/0003-network-isolation-strategy.md)
+
+---
+
 * ![System Design Diagram](docs/architecture/architecture.png)
 
 ## 4. Project Roadmap & Status
 | Phase                | Component                     | Tech Stack                  | Status           |
 |----------------------|-------------------------------|-----------------------------|------------------|
 | **1. Foundation**    | Identity, Authz, Governance   | Cognito, Cedar, AWS Budgets | ✅ **Completed** |
-| **2. Networking**    | VPC, Subnets, Security Groups | AWS, VPC                    | ⏳ *Pending*     |
+| **2. Networking**    | VPC, Subnets, Security Groups | AWS, VPC                    | ✅ **Completed** |
 | **3. Data Plane**    | Database, Schema Isolation    | RDS PostgreSQL              | ⏳ *Pending*     |
 | **4. Control Plane** | Request Routing               | API Gateway, Lambda         | ⏳ *Pending*     |
