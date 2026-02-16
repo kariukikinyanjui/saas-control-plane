@@ -32,10 +32,18 @@
     * **Public Zone:** Contains the Application Load Balancer (ALB) and Bastion Host.
     * **Private Zone:** Houses the RDS Instance and Lambda Functions. **No Internet Gateway attachment.**
 
+### D. Data Plane
+* **Database:** Amazon RDS PostgreSQL (`db.t4g.micro`).
+* **Security:**
+    * **Network:** Deployed in Private Subnets (No internet access).
+    * **Access Control:** Security Group allows traffic *only* from the VPC CIDR.
+    * **Credentials:** Managed via AWS Secrets Manager (No hardcoded passwords).
+
 ## 3. Documentation
 * [ADR-0001: Data Isolation Strategy](docs/adr/0001-database-isolation-strategy.md)
 * [ADR-0002: Identity and Access Management Strategy](docs/adr/0002-identity-and-access-management.md)
 * [ADR-0003: Netowrk Isolation Strategy](docs/adr/0003-network-isolation-strategy.md)
+* [ADR-0004: Database and Secrets Management Strategy](docs/adr/0004-database-and-secrets-strategy.md)
 
 ---
 
@@ -46,5 +54,5 @@
 |----------------------|-------------------------------|-----------------------------|------------------|
 | **1. Foundation**    | Identity, Authz, Governance   | Cognito, Cedar, AWS Budgets | ✅ **Completed** |
 | **2. Networking**    | VPC, Subnets, Security Groups | AWS, VPC                    | ✅ **Completed** |
-| **3. Data Plane**    | Database, Schema Isolation    | RDS PostgreSQL              | ⏳ *Pending*     |
+| **3. Data Plane**    | Database, Schema Isolation    | RDS PostgreSQL              | ✅ **Completed** |
 | **4. Control Plane** | Request Routing               | API Gateway, Lambda         | ⏳ *Pending*     |
