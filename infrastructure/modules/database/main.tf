@@ -10,6 +10,7 @@ resource "aws_security_group" "rds_sg" {
     to_port     = 5432
     protocol    = "tcp"
     cidr_blocks = [var.vpc_cidr]
+    security_groups = var.bastion_sg_id != null ? [var.bastion_sg_id] : []
   }
 
   # Egress: Allow all outbound (Standard for updates/logging)
