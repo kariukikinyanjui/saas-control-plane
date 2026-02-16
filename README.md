@@ -50,7 +50,7 @@
 * [ADR-0003: Netowrk Isolation Strategy](docs/adr/0003-network-isolation-strategy.md)
 * [ADR-0004: Database and Secrets Management Strategy](docs/adr/0004-database-and-secrets-strategy.md)
 * [ADR-0005: Bastion Host for Database Access](docs/adr/0005-bastion-host-access.md)
-
+* [ADR-0006: Data Isolation Strategy](docs/adr/0006-data-isolation-strategy.md)
 ---
 
 * ![System Design Diagram](docs/architecture/architecture.png)
@@ -62,7 +62,8 @@
 | **2. Networking**         | VPC, Subnets, Security Groups | AWS, VPC                    | ✅ **Completed**            |
 | **3. Data Plane**         | Database, Schema Isolation    | RDS PostgreSQL              | ✅ **Infrastructure Ready** |
 | **4. Operational Access** | Bastion Host (SSH Tunnel)     | EC2, Security Groups        | ✅ **Completed**            |
-| **4. Control Plane**      | Request Routing               | API Gateway, Lambda         | ⏳ *Pending*                |
+| **5. Schema Logic**       | Multi-Tenant Migration Scripts| Python/SQL                  | ✅ **Completed**            |
+| **6. Control Plane**      | Request Routing               | API Gateway, Lambda, Pytho  | ⏳ *Pending*                |
 
 ---
 
