@@ -26,10 +26,17 @@ module "network" {
 
 module "database" {
   source = "./modules/database"
-
   project_name = "saas-control-plane"
   environment  = "dev"
   vpc_id       = module.network.vpc_id
   vpc_cidr     = "10.0.0.0/16"
   private_subnet_ids = module.network.private_subnet_ids
+  bastion_sg_id      = module.bastion.security_group_id
+}
+
+module "bastion" {
+  source            = "./modules/bastion"
+  project_name      = "saas-control-plane"
+  vpc_id            = module.network.vpc_id
+  public_subnet_id  = module.network.public_subnet_ids[0]
 }
