@@ -39,20 +39,55 @@
     * **Access Control:** Security Group allows traffic *only* from the VPC CIDR.
     * **Credentials:** Managed via AWS Secrets Manager (No hardcoded passwords).
 
+### E. Operational Access
+* **Bastion Host:** A t2.micro EC2 instance in the Public Subnet.
+    * *Purpose:* distinct entry point for developers to run SQL migrations.
+    * *Method:* SSH Tunneling maps `localhost:5433` -> `Bastion` -> `RDS:5432`.
+
 ## 3. Documentation
 * [ADR-0001: Data Isolation Strategy](docs/adr/0001-database-isolation-strategy.md)
 * [ADR-0002: Identity and Access Management Strategy](docs/adr/0002-identity-and-access-management.md)
 * [ADR-0003: Netowrk Isolation Strategy](docs/adr/0003-network-isolation-strategy.md)
 * [ADR-0004: Database and Secrets Management Strategy](docs/adr/0004-database-and-secrets-strategy.md)
+* [ADR-0005: Bastion Host for Database Access](docs/adr/0005-bastion-host-access.md)
 
 ---
 
 * ![System Design Diagram](docs/architecture/architecture.png)
 
 ## 4. Project Roadmap & Status
-| Phase                | Component                     | Tech Stack                  | Status           |
-|----------------------|-------------------------------|-----------------------------|------------------|
-| **1. Foundation**    | Identity, Authz, Governance   | Cognito, Cedar, AWS Budgets | ✅ **Completed** |
-| **2. Networking**    | VPC, Subnets, Security Groups | AWS, VPC                    | ✅ **Completed** |
-| **3. Data Plane**    | Database, Schema Isolation    | RDS PostgreSQL              | ✅ **Completed** |
-| **4. Control Plane** | Request Routing               | API Gateway, Lambda         | ⏳ *Pending*     |
+| Phase                     | Component                     | Tech Stack                  | Status                      |
+|----------------------     |-------------------------------|-----------------------------|-----------------------------|
+| **1. Foundation**         | Identity, Authz, Governance   | Cognito, Cedar, AWS Budgets | ✅ **Completed**            |
+| **2. Networking**         | VPC, Subnets, Security Groups | AWS, VPC                    | ✅ **Completed**            |
+| **3. Data Plane**         | Database, Schema Isolation    | RDS PostgreSQL              | ✅ **Infrastructure Ready** |
+| **4. Operational Access** | Bastion Host (SSH Tunnel)     | EC2, Security Groups        | ✅ **Completed**            |
+| **4. Control Plane**      | Request Routing               | API Gateway, Lambda         | ⏳ *Pending*                |
+
+---
+
+## 4. Developer Guide: connecting to the Database
+
+Since the database is private, you must open an SSH tunnel to connect.
+
+**1. Get Connection Details:**
+```bash
+cd infrastructure
+terraform output -json
+```
+Note the `bastion_public_ip` and `db_endpoint`
+
+**2. Open the Tunnel**
+Run this in a separate terminal window
+```bash
+ssh -i infrastructure/modules/bastion/bastion-key.pem \
+    -L 5433:<RDS_ENDPOINT>:5432 \
+    ec2-user@<BASTION_PUBLIC_IP> -N
+```
+
+**3. Connect**
+Use your SQL client (DBeaver/pgAdmin) to connect to:
+* **Host:** `localhost`
+* **Port:** `5433`
+* **User:** `dbadmin`
+* **Password:** (Retrieve from AWS Secrets Manager)
