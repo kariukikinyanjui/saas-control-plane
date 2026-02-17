@@ -2,6 +2,7 @@ import json
 import os
 import psycopg2
 import boto3
+import re
 from psycopg2.extras import RealDictCursor
 
 # 1. Environment Variables (Injected by Terraform)
@@ -52,7 +53,7 @@ def lambda_handler(event, context):
     tenant_id = event.get('headers', {}).get('x-tenant-id', 'tenant_a')
 
     # Security Check: Ensure tenant_id is alphanumeric to prevent SQL Injection
-    if not tenant_id.isalnum():
+    if not re.match(r'^[a-zA-z0-9_-]+$', tenant_id):
         return {
             'statusCode': 400,
             'body': json.dumps({'error': 'Invalid Tenant ID'})
