@@ -8,3 +8,4 @@ variable "bastion_sg_id" {
   type         = string
   default      = null
 }
+
