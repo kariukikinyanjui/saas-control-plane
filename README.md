@@ -51,6 +51,7 @@
 * [ADR-0004: Database and Secrets Management Strategy](docs/adr/0004-database-and-secrets-strategy.md)
 * [ADR-0005: Bastion Host for Database Access](docs/adr/0005-bastion-host-access.md)
 * [ADR-0006: Serverless Application Logic](docs/adr/0006-serverless-application-logic.md)
+* [ADR-0007: High Availability (HA) and Disaster Recovery (DR) Strategy](docs/adr/0007-high-availability-dr.md)
 ---
 
 * ![System Design Diagram](docs/architecture/architecture.png)
