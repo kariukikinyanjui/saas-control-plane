@@ -64,6 +64,7 @@
 | **4. Operational Access** | Bastion Host (SSH Tunnel)     | EC2, Security Groups        | ✅ **Completed**            |
 | **5. Schema Logic**       | Multi-Tenant Migration Scripts| Python/SQL                  | ✅ **Completed**            |
 | **6. Control Plane**      | Request Routing               | API Gateway, Lambda, Python | ✅ **Completed**            |
+| **7. Observability**      | CloudWatch Dashboard          | Terraform                   | ✅ **Completed**            |
 
 ---
 
@@ -101,3 +102,11 @@ This infrastructure is currently live. You can test the multi-tenant data isolat
 3. Toggle the `x-tenant-id` header between `tenant_a` and `tenant_b` to observe the strict schema-level isolation enforced by the backend Lambda.
 
 **Live Endpoint:** `https://nq66yc5ndk.execute-api.us-east-1.amazonaws.com`
+
+## Day-2 Operations: Observability & Monitoring
+A robust SaaS control plane requires deep visibility into traffic and errors. This infrastructure includes a fully automated AWS CloudWatch Dashboard provisioned via Terraform.
+
+* **API Gateway Metrics:** Tracks total HTTP requests routed to the Control Plane.
+* **Lambda Metrics:** Tracks function invocations and application-level errors (e.g., unauthorized tenant access attempts.)
+
+![CloudWatch Dashboard](docs/assets/cloudwatch-dashboard.png)

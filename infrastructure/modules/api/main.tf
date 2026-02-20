@@ -143,3 +143,51 @@ resource "aws_lambda_permission" "api_gw" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
+
+# 12. Observability (CloudWatch Dashboard)
+resource "aws_cloudwatch_dashboard" "saas_dashboard" {
+  dashboard_name = "${var.project_name}-dashboard"
+
+  dashboard_body = <<EOF
+{
+  "widgets": [
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [ "AWS/ApiGateway", "Count", "ApiId", "${aws_apigatewayv2_api.http_api.id}" ]
+        ],
+        "period": 60,
+        "stat": "Sum",
+        "region": "us-east-1",
+        "title": "API Gateway: Total Requests",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [ "AWS/Lambda", "Errors", "FunctionName", "${aws_lambda_function.api_handler.function_name}" ],
+          [ ".", "Invocations", ".", "." ]
+        ],
+        "period": 60,
+        "stat": "Sum",
+        "region": "us-east-1",
+        "title": "Lambda: Invocations vs Errors",
+        "view": "timeSeries"
+      }
+    }
+  ]
+}
+EOF
+}
+
