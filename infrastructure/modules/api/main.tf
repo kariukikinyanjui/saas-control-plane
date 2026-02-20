@@ -104,3 +104,42 @@ resource "aws_security_group_rule" "allow_lambda_to_rds" {
   # We need the RDS SG ID passed in as a variable
   security_group_id  = var.rds_sg_id
 }
+
+# 7. Create the HTTP API
+resource "aws_apigatewayv2_api" "http_api" {
+  name          = "${var.project_name}-gateway"
+  protocol_type = "HTTP"
+}
+
+# 8. Integrate the API with the Lambda Function
+resource "aws_apigatewayv2_integration" "lambda_integration" {
+  api_id           = aws_apigatewayv2_api.http_api.id
+  integration_type = "AWS_PROXY"
+
+  integration_uri    = aws_lambda_function.api_handler.invoke_arn
+  integration_method = "POST"
+  payload_format_version = "2.0"
+}
+
+# 9. Create the Route
+resource "aws_apigatewayv2_route" "get_todos" {
+  api_id  = aws_apigatewayv2_api.http_api.id
+  route_key = "GET /todos"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+}
+
+# 10. Create the Stage (Deployment)
+resource "aws_apigatewayv2_stage" "default" {
+  api_id = aws_apigatewayv2_api.http_api.id
+  name   = "$default"
+  auto_deploy = true
+}
+
+# 11. Grant API Gateway permission to invoke the Lambda
+resource "aws_lambda_permission" "api_gw" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action       = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.api_handler.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
+}

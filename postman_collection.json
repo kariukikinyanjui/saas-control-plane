@@ -1,0 +1,26 @@
+{
+  "info": {
+    "_postman_id": "8f240ab3-ee87-460a-bf4d-f7d2a922b68f",
+    "name": "SaaS Control Plane API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33186309"
+  },
+  "item": [
+    {
+      "name": "Get Tenant A Todos",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Get Tenant B Todos",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}
