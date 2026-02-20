@@ -1,3 +1,8 @@
+# Fetch the secret value so we can inject it
+data "aws_secretsmanager_secret_version" "creds" {
+  secret_id = var.secret_name
+}
+
 # 1. Archive the Python Code
 data "archive_file" "lambda_zip" {
   type         = "zip"
@@ -77,7 +82,9 @@ resource "aws_lambda_function" "api_handler" {
     variables = {
       DB_HOST     = var.db_endpoint
       DB_NAME     = "postgres"
-      SECRET_NAME = var.secret_name
+      # Parse the JSON secret and pass values securely
+      DB_USER     = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)["username"]
+      DB_PASSWORD = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)["password"]
     }
   }
 

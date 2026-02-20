@@ -1,37 +1,24 @@
 import json
 import os
 import psycopg2
-import boto3
 import re
 from psycopg2.extras import RealDictCursor
 
 # 1. Environment Variables (Injected by Terraform)
 DB_HOST = os.environ['DB_HOST']
 DB_NAME = os.environ['DB_NAME']
-SECRET_NAME = os.environ['SECRET_NAME']
-REGION = os.environ['AWS_REGION']
+DB_USER = os.environ['DB_USER']
+DB_PASSWORD = os.environ['DB_PASSWORD']
 
-# 2. Cache the DB Credentials (Global scope reuses connection across warm starts)
-db_creds = None
-
-def get_db_creds():
-    global db_creds
-    if db_creds:
-        return db_creds
-
-    client = boto3.client('secretsmanager', region_name=REGION)
-    secret_value = client.get_secret-value(SecretId=SECRET_NAME)
-    db_creds = json.loads(secret_value['SecretString'])
-    return db_creds
 
 def connect_db():
-    creds = get_db_creds()
     try:
+        # Connect using the environment variables
         conn = psycopg2.connect(
             host=DB_HOST,
             database=DB_NAME,
-            user=creds['username'],
-            password=creds['password'],
+            user=DB_USER,
+            password=DB_PASSWORD,
             connect_timeout=5
         )
         return conn
@@ -83,7 +70,7 @@ def lambda_handler(event, context):
         print(f"Query Error: {e}")
         return {
             'statusCode': 500,
-            'body': json.dump({'error': str(e)})
+            'body': json.dumps({'error': str(e)})
         }
     finally:
         if conn:
