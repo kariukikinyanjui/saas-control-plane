@@ -92,3 +92,12 @@ Use your SQL client (DBeaver/pgAdmin) to connect to:
 * **Port:** `5433`
 * **User:** `dbadmin`
 * **Password:** (Retrieve from AWS Secrets Manager)
+
+## Proof of Concept: Live API Testing
+This infrastructure is currently live. You can test the multi-tenant data isolation using the provided Postman collection.
+
+1. Import the `postman_collection.json` file into Postman.
+2. The collection hits the live AWS API Gateway endpoint.
+3. Toggle the `x-tenant-id` header between `tenant_a` and `tenant_b` to observe the strict schema-level isolation enforced by the backend Lambda.
+
+**Live Endpoint:** `https://nq66yc5ndk.execute-api.us-east-1.amazonaws.com`
